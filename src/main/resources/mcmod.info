@@ -1,0 +1,16 @@
+[
+{
+  "modid": "EvilSky",
+  "name": "EvilSky",
+  "description": "",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Kormic911"],
+  "credits": "rftools/YUNoMakeGoodMap",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
