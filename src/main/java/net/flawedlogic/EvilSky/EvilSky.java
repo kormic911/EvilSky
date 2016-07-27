@@ -46,7 +46,7 @@ public class EvilSky
 	@Instance("EvilSky")
 	public static EvilSky instance;
     public static final String MODID = "EvilSky";
-    public static final String VERSION = "1.1.2";
+    public static final String VERSION = "1.0.0";
     private VoidWorldType worldType;
     
     private Map<String, IPlatformGenerator> generators = Maps.newHashMap();
