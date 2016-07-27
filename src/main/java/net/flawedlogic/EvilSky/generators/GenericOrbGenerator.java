@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.common.FMLLog;
 import net.flawedlogic.EvilSky.EvilSky;
-import net.flawedlogic.EvilSky.Generator;
+import net.flawedlogic.EvilSky.util.Generator;
 import net.minecraft.block.Block;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;

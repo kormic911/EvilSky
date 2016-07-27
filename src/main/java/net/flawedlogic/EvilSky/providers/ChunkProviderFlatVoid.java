@@ -1,9 +1,9 @@
 package net.flawedlogic.EvilSky.providers;
 
-import net.flawedlogic.EvilSky.BlockWithMeta;
 import net.flawedlogic.EvilSky.EvilSky;
-import net.flawedlogic.EvilSky.Generator;
 import net.flawedlogic.EvilSky.generators.GenericOrbGenerator;
+import net.flawedlogic.EvilSky.util.BlockWithMeta;
+import net.flawedlogic.EvilSky.util.Generator;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.WeightedRandom;

@@ -22,6 +22,8 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.flawedlogic.EvilSky.generators.*;
 import net.flawedlogic.EvilSky.providers.*;
+import net.flawedlogic.EvilSky.util.BlockWithMeta;
+import net.flawedlogic.EvilSky.util.Generator;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;

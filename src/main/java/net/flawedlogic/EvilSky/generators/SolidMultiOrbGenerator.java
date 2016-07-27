@@ -2,8 +2,8 @@ package net.flawedlogic.EvilSky.generators;
 
 import java.util.Random;
 
-import net.flawedlogic.EvilSky.BlockWithMeta;
 import net.flawedlogic.EvilSky.EvilSky;
+import net.flawedlogic.EvilSky.util.BlockWithMeta;
 import net.minecraft.block.Block;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;

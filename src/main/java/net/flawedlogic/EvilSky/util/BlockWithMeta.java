@@ -1,4 +1,4 @@
-package net.flawedlogic.EvilSky;
+package net.flawedlogic.EvilSky.util;
 
 import java.util.Random; 
 
