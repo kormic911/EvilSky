@@ -12,7 +12,7 @@ public class BlockWithMeta extends WeightedRandom.Item {
     public final int meta; 
  
     public BlockWithMeta(Block block) { 
-        this(block, 0); 
+        this(block, 0, 1); 
     } 
  
     public BlockWithMeta(Block block, int meta) { 

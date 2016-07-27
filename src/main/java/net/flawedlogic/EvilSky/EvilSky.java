@@ -52,6 +52,10 @@ public class EvilSky
     public Map<Integer, List<BlockWithMeta>> dimensionBlocks = Maps.newHashMap();
     public Map<Integer, List<BlockWithMeta>> dimensionLiquidBlocks = Maps.newHashMap();
     public Map<Integer, Boolean> dimensionIsVoid = Maps.newHashMap();
+    public Map<Integer, List<Generator>> dimensionGenerators = Maps.newHashMap();
+    
+    public Boolean endHasSpikes = false;
+    public Boolean netherHasFortresses = false;
     
     public static final String GENERAL = Configuration.CATEGORY_GENERAL;
     public static final String OVERWORLD = "dimension:0";
@@ -68,23 +72,26 @@ public class EvilSky
     	try {
     		config = new Configuration(cfgFile);
 
-    		Boolean _endHasSpikes = config.getBoolean("End has obsidian spikes?", GENERAL, true, "Enabling this will cause the obisidan spikes to spawn in the end");
-    		Boolean _netherHasFortresses = config.getBoolean("Nether has fortresses?", GENERAL, true, "Enabling this will cause the nether fortresses to spawn");
+    		Boolean endHasSpikes = config.getBoolean("End has obsidian spikes?", GENERAL, true, "Enabling this will cause the obisidan spikes to spawn in the end");
+    		Boolean netherHasFortresses = config.getBoolean("Nether has fortresses?", GENERAL, true, "Enabling this will cause the nether fortresses to spawn");
     		
         	// Overworld Configurations
         	config.getStringList("blocks", OVERWORLD, new String[] {"minecraft:dirt:0=20", "minecraft:stone:0=5", "minecraft:sand:0=1", "minecraft:air:0=5", "minecraft:gravel:0=1", "minecraft:clay:0=1"}, "List of blocks to use in overworld terrain generation. Use this format: modid:blockName:metaId=weight");
-        	config.getStringList("liquid blocks", OVERWORLD, new String[] {}, "List of liquid blocks to use in the overworld terrain generation. Use this format: modid:blockName:metaId=weight");
+        	config.getStringList("liquid blocks", OVERWORLD, new String[] {"minecraft:water:0=10", "minecraft:lava:0=10"}, "List of liquid blocks to use in the overworld terrain generation. Use this format: modid:blockName:metaId=weight");
         	config.getBoolean("is void", OVERWORLD, true, "Enabling this will cause the overworld to be a void world");
+        	config.getStringList("generators", OVERWORLD, new String[] {"solidOrb=50", "liquidOrb=10", "solidMultiOrb=20"}, "List of generators to use in the generation of the dimension. Use this format: generator=weight");
         	
         	// Nether Configurations
-        	config.getStringList("blocks", NETHER, new String[] {}, "List of blocks to use in nether terrain generation. Use this format: modid:blockName:metaId=weight");
-        	config.getStringList("liquid blocks", NETHER, new String[] {}, "List of liquid blocks to use in the nether terrain generation. Use this format: modid:blockName:metaId=weight");
+        	config.getStringList("blocks", NETHER, new String[] {"minecraft:netherrack:0=50", "minecraft:soul_sand:0=10"}, "List of blocks to use in nether terrain generation. Use this format: modid:blockName:metaId=weight");
+        	config.getStringList("liquid blocks", NETHER, new String[] {"minecraft:lava:0=1"}, "List of liquid blocks to use in the nether terrain generation. Use this format: modid:blockName:metaId=weight");
         	config.getBoolean("is void", NETHER, true, "Enabling this will cause the nether to be a void world");
+        	config.getStringList("generators", NETHER, new String[] {"solidOrb=50", "liquidOrb=2"}, "List of generators to use in the generation of the dimension. Use this format: generator=weight");
         	
         	// End Configurations
-        	config.getStringList("blocks", END, new String[] {}, "List of blocks to use in the end terrain generation. Use this format: modid:blockName:metaId=weight");
+        	config.getStringList("blocks", END, new String[] {"minecraft:end_stone:0=1"}, "List of blocks to use in the end terrain generation. Use this format: modid:blockName:metaId=weight");
         	config.getStringList("liquid blocks", END, new String[] {}, "List of liquid blocks to use in the end terrain generation. Use this format: modid:blockName:metaId=weight");
         	config.getBoolean("is void", END, true, "Enabling this will cause the end to be a void world");
+        	config.getStringList("generators", END, new String[] {"solidOrb=1"}, "List of generators to use in the generation of the dimension. Use this format: generator=weight");
         	
         	// Process the dimension configurations
         	Iterator<String> categoryNames = config.getCategoryNames().iterator();
@@ -129,6 +136,8 @@ public class EvilSky
     	
     	Hashtable<Integer, Class<? extends WorldProvider>> providers = ReflectionHelper.getPrivateValue(DimensionManager.class, null, "providers");
     	providers.put(0,  WorldProviderSurfaceVoid.class);
+    	providers.put(1, WorldProviderEndVoid.class);
+    	providers.put(-1, WorldProviderNetherVoid.class);
     }
     
     @SubscribeEvent
@@ -168,12 +177,12 @@ public class EvilSky
     
     public boolean shouldGenerateSpikes(World world)
     {
-    	return false;
+    	return endHasSpikes;
     }
     
     public boolean shouldGenerateNetherFortress(World world)
     {
-    	return false;
+    	return netherHasFortresses;
     }
     
     private void processDimensionConfigurations(Integer dimensionId, ConfigCategory dimensionConfiguration )
@@ -188,10 +197,25 @@ public class EvilSky
     	String[] liquidBlocks = dimensionProperties.get("liquid blocks").getStringList();
     	processDimensionBlocks(dimensionId, dimensionLiquidBlocks, liquidBlocks);
     	
+    	FMLLog.log(Level.INFO, "[EvilSky] Loading generators for dimension: "+dimensionId);
+    	String[] generators = dimensionProperties.get("generators").getStringList();
+    	processDimensionGenerators(dimensionId, dimensionGenerators, generators);
+    	
     	Boolean isVoid = dimensionProperties.get("is void").getBoolean();
     	
     	// Handle the dimension void information
     	dimensionIsVoid.put(dimensionId, isVoid);
+    }
+    
+    private void processDimensionGenerators(Integer dimensionId, Map<Integer, List<Generator>> generatorList, String[] generators)
+    {
+    	List<Generator> _generators = new ArrayList<Generator>();
+    	
+    	for(String generatorData : generators) {
+    		String[] parts = generatorData.split("=");
+    		_generators.add(new Generator(parts[0], new Integer(parts[1])));
+    	}
+    	generatorList.put(dimensionId, _generators);
     }
     
     private void processDimensionBlocks(Integer dimensionId, Map<Integer, List<BlockWithMeta>> blockList, String[] blocks)

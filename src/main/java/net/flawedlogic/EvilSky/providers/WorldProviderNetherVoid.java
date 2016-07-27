@@ -12,6 +12,7 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderHell;
 import net.minecraft.world.gen.MapGenBase;
 import net.flawedlogic.EvilSky.EvilSky;
+import net.flawedlogic.EvilSky.generators.GenericOrbGenerator;
 
 public class WorldProviderNetherVoid extends WorldProviderHell {
 
@@ -27,6 +28,7 @@ public class WorldProviderNetherVoid extends WorldProviderHell {
     {
         private World world;
         private Field genWorldF;
+        private GenericOrbGenerator genericOrbGenerator;
 
         public ChunkProviderHellVoid(World world, long seed)
         {
@@ -34,6 +36,7 @@ public class WorldProviderNetherVoid extends WorldProviderHell {
             this.world = world;
             genWorldF = ReflectionHelper.findField(MapGenBase.class, "field_75039_c", "worldObj");
             genWorldF.setAccessible(true);
+            genericOrbGenerator = new GenericOrbGenerator(this.world);
         }
 
         @Override public Chunk loadChunk(int x, int z){ return this.provideChunk(x, z); }
@@ -56,10 +59,11 @@ public class WorldProviderNetherVoid extends WorldProviderHell {
         @Override
         public Chunk provideChunk(int x, int z)
         {
-            Block[] data =  new Block[8 * 16 * 16 * 16];
+            Block[] ablock =  new Block[65536];
+            byte[] abyte = new byte[65536];
 
             if (EvilSky.instance.shouldGenerateNetherFortress(world))
-                genNetherBridge.func_151539_a(this, world, x, z, data);
+                genNetherBridge.func_151539_a(this, world, x, z, ablock);
             else
             {
                 try
@@ -71,8 +75,10 @@ public class WorldProviderNetherVoid extends WorldProviderHell {
                     throw new RuntimeException("Failed to set world object, either enable nether fortres gen or find a fix:", e);
                 }
             }
+            
+            genericOrbGenerator.generate(x, z, ablock, abyte);
 
-            Chunk ret = new Chunk(world, data, x, z);
+            Chunk ret = new Chunk(world, ablock, abyte, x, z);
             BiomeGenBase[] biomes = world.getWorldChunkManager().loadBlockGeneratorData(null, x * 16, z * 16, 16, 16);
             byte[] ids = ret.getBiomeArray();
 

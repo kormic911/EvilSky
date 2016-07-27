@@ -11,6 +11,7 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderEnd;
 import net.minecraft.world.gen.feature.WorldGenSpikes;
 import net.flawedlogic.EvilSky.EvilSky;
+import net.flawedlogic.EvilSky.generators.GenericOrbGenerator;
 
 public class WorldProviderEndVoid extends WorldProviderEnd {
 
@@ -25,11 +26,13 @@ public class WorldProviderEndVoid extends WorldProviderEnd {
     {
         private World world;
         private WorldGenSpikes spikes = new WorldGenSpikes(Blocks.air);
+        private GenericOrbGenerator genericOrbGenerator;
 
         public ChunkProviderEndVoid(World world, long seed)
         {
             super(world, seed);
             this.world = world;
+            genericOrbGenerator = new GenericOrbGenerator(this.world);
         }
 
         @Override public Chunk loadChunk(int x, int z){ return this.provideChunk(x, z); }
@@ -56,7 +59,12 @@ public class WorldProviderEndVoid extends WorldProviderEnd {
 
         @Override public Chunk provideChunk(int x, int z)
         {
-            Chunk ret = new Chunk(world, new Block[8 * 16 * 16 * 16], x, z);
+            Block[] ablock =  new Block[65536];
+            byte[] abyte = new byte[65536];
+            
+            genericOrbGenerator.generate(x, z, ablock, abyte);
+            
+            Chunk ret = new Chunk(world, ablock, abyte, x, z);
             BiomeGenBase[] biomes = world.getWorldChunkManager().loadBlockGeneratorData(null, x * 16, z * 16, 16, 16);
             byte[] ids = ret.getBiomeArray();
 

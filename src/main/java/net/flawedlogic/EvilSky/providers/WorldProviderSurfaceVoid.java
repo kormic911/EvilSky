@@ -1,6 +1,5 @@
 package net.flawedlogic.EvilSky.providers;
 
-import net.flawedlogic.EvilSky.ChunkProviderFlatVoid;
 import net.flawedlogic.EvilSky.EvilSky;
 import net.flawedlogic.EvilSky.VoidWorldChunkManager;
 import net.minecraft.util.ChunkCoordinates;
