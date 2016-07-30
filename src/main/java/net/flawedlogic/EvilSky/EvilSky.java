@@ -46,7 +46,7 @@ public class EvilSky
 	@Instance("EvilSky")
 	public static EvilSky instance;
     public static final String MODID = "EvilSky";
-    public static final String VERSION = "1.0.0";
+    public static final String VERSION = "1.0.1";
     private VoidWorldType worldType;
     
     private Map<String, IPlatformGenerator> generators = Maps.newHashMap();
@@ -74,8 +74,8 @@ public class EvilSky
     	try {
     		config = new Configuration(cfgFile);
 
-    		Boolean endHasSpikes = config.getBoolean("End has obsidian spikes?", GENERAL, true, "Enabling this will cause the obisidan spikes to spawn in the end");
-    		Boolean netherHasFortresses = config.getBoolean("Nether has fortresses?", GENERAL, true, "Enabling this will cause the nether fortresses to spawn");
+    		endHasSpikes = config.getBoolean("End has obsidian spikes?", GENERAL, true, "Enabling this will cause the obisidan spikes to spawn in the end");
+    		netherHasFortresses = config.getBoolean("Nether has fortresses?", GENERAL, true, "Enabling this will cause the nether fortresses to spawn");
     		
         	// Overworld Configurations
         	config.getStringList("blocks", OVERWORLD, new String[] {"minecraft:dirt:0=20", "minecraft:stone:0=5", "minecraft:sand:0=1", "minecraft:air:0=5", "minecraft:gravel:0=1", "minecraft:clay:0=1"}, "List of blocks to use in overworld terrain generation. Use this format: modid:blockName:metaId=weight");

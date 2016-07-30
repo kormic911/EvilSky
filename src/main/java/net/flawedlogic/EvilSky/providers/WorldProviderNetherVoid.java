@@ -2,6 +2,9 @@ package net.flawedlogic.EvilSky.providers;
 
 import java.lang.reflect.Field;
 
+import org.apache.logging.log4j.Level;
+
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
@@ -43,8 +46,9 @@ public class WorldProviderNetherVoid extends WorldProviderHell {
         @Override
         public void populate(IChunkProvider provider, int x, int z)
         {
-            if (EvilSky.instance.shouldGenerateNetherFortress(world))
+            if (EvilSky.instance.shouldGenerateNetherFortress(world)) {
                 genNetherBridge.generateStructuresInChunk(world, world.rand, x, z);
+            }
 
             int spawnX = world.getWorldInfo().getSpawnX() / 8;
             int spawnY = world.getWorldInfo().getSpawnY();
@@ -62,10 +66,9 @@ public class WorldProviderNetherVoid extends WorldProviderHell {
             Block[] ablock =  new Block[65536];
             byte[] abyte = new byte[65536];
 
-            if (EvilSky.instance.shouldGenerateNetherFortress(world))
+            if (EvilSky.instance.shouldGenerateNetherFortress(world)) {
                 genNetherBridge.func_151539_a(this, world, x, z, ablock);
-            else
-            {
+            } else {
                 try
                 {
                     genWorldF.set(genNetherBridge, world);
